@@ -106,11 +106,11 @@ Header: "Authorization: Bearer {YOUR_TOKEN}"
 ```
 ```JSON
 {
-    title: "Here I am",
-    album: "Spirit"
-    singer: "Bryan Adams"
-    genre: "Rock",
-    year: 2002
+    "title": "Here I am",
+    "album": "Spirit",
+    "singer": "Bryan Adams",
+    "genre": "Rock",
+    "year": 2002
 }
 ```
 ### Patch a song
@@ -120,7 +120,7 @@ Header: "Authorization: Bearer {YOUR_TOKEN}"
 ```
 ```JSON
 {
-    album: "Spirit: Stallion of the Cimarron"
+    "album": "Spirit: Stallion of the Cimarron"
 }
 ```
 
