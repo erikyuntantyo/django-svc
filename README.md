@@ -38,11 +38,11 @@ Endpoint |HTTP Method | CRUD Method | Result
 ## Use
 We can test the API using [curl](https://curl.haxx.se/) or [httpie](https://github.com/jakubroztocil/httpie#installation), or we can use [Postman](https://www.postman.com/).
 
-## Create users and Tokens
+## Users Sign Up and Sign In
 
-### Create a user
+### Sign up a user
 ```
-POST http://localhost:8000/v1/auth/register/
+POST http://localhost:8000/v1/account/signup
 ```
 ```json
 {
@@ -51,9 +51,9 @@ POST http://localhost:8000/v1/auth/register/
 }
 ```
 
-### Get token
+### Sign in
 ```
-POST http://localhost:8000/v1/auth/token/
+POST http://localhost:8000/v1/account/login
 ```
 ```JSON
 {
@@ -64,6 +64,7 @@ POST http://localhost:8000/v1/auth/token/
 Response
 ```JSON
 {
+    "userId": "66a5dd5af14f86b95db29393",
     "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTYxNjI5MjMyMSwianRpIjoiNGNkODA3YTlkMmMxNDA2NWFhMzNhYzMxOTgyMzhkZTgiLCJ1c2VyX2lkIjozfQ.hP1wPOPvaPo2DYTC9M1AuOSogdRL_mGP30CHsbpf4zA",
     "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjE2MjA2MjIxLCJqdGkiOiJjNTNlNThmYjE4N2Q0YWY2YTE5MGNiMzhlNjU5ZmI0NSIsInVzZXJfaWQiOjN9.Csz-SgXoItUbT3RgB3zXhjA2DAv77hpYjqlgEMNAHps"
 }
@@ -91,17 +92,17 @@ and we will get a new access token
 
 ### Get all songs
 ```
-GET http://localhost:8000/v1/songs/
+GET http://localhost:8000/v1/songs
 Header: "Authorization: Bearer {YOUR_TOKEN}"
 ```
 ### Get a single song
 ```
-GET http://localhost:8000/v1/songs/{song_id}/
+GET http://localhost:8000/v1/songs/{song_id}
 Header: "Authorization: Bearer {YOUR_TOKEN}"
 ```
 ### Create a new song
 ```
-POST http://localhost:8000/v1/songs/
+POST http://localhost:8000/v1/songs
 Header: "Authorization: Bearer {YOUR_TOKEN}"
 ```
 ```JSON
@@ -115,7 +116,7 @@ Header: "Authorization: Bearer {YOUR_TOKEN}"
 ```
 ### Patch a song
 ```
-PATCH http://localhost:8000/v1/songs/{song_id}/
+PATCH http://localhost:8000/v1/songs/{song_id}
 Header: "Authorization: Bearer {YOUR_TOKEN}"
 ```
 ```JSON
@@ -126,35 +127,35 @@ Header: "Authorization: Bearer {YOUR_TOKEN}"
 
 ### Delete a song
 ```
-DELETE http://localhost:8000/v1/songs/{song_id}/
+DELETE http://localhost:8000/v1/songs/{song_id}
 Header: "Authorization: Bearer {YOUR_TOKEN}"
 ```
 
 ### Pagination
 The API supports pagination, by default responses have a page_size=10 but if you want change that you can pass through params page_size={your_page_size_number}
 ```
-GET http://localhost:8000/v1/songs/?page=1
+GET http://localhost:8000/v1/songs?page=1
 Header "Authorization: Bearer {YOUR_TOKEN}"
 
-GET http://localhost:8000/v1/songs/?page=3
+GET http://localhost:8000/v1/songs?page=3
 Header "Authorization: Bearer {YOUR_TOKEN}"
 
-GET http://localhost:8000/v1/songs/?page=3&page_size=15
+GET http://localhost:8000/v1/songs?page=3&page_size=15
 Header "Authorization: Bearer {YOUR_TOKEN}"
 ```
 
 ### Filters
 The API supports filtering, you can filter by the attributes of a song like this
 ```
-GET http://localhost:8000/v1/songs/?title="Here I am"
+GET http://localhost:8000/v1/songs?title="Here I am"
 Header: "Authorization: Bearer {YOUR_TOKEN}"
 
-GET http://localhost:8000/v1/songs/?year=2020
+GET http://localhost:8000/v1/songs?year=2020
 Header: "Authorization: Bearer {YOUR_TOKEN}"
 
-GET http://localhost:8000/v1/songs/?year__gt=2002&year__lt=2022
+GET http://localhost:8000/v1/songs?year__gt=2002&year__lt=2022
 Header: "Authorization: Bearer {YOUR_TOKEN}"
 
-GET http://localhost:8000/v1/songs/?genre="Rock"
+GET http://localhost:8000/v1/songs?genre="Rock"
 Header: "Authorization: Bearer {YOUR_TOKEN}"
 ```
