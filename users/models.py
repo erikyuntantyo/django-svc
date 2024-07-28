@@ -1,5 +1,6 @@
+from bson import ObjectId
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-from django.db import models
+from django.db.models import BooleanField, CharField, EmailField
 
 
 class UserManager(BaseUserManager):
@@ -20,9 +21,10 @@ class UserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 class User(AbstractBaseUser):
-    email = models.EmailField(unique=True)
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
+    _id = CharField(primary_key=True, default=ObjectId, editable=False, max_length=24)
+    email = EmailField(unique=True)
+    is_active = BooleanField(default=True)
+    is_staff = BooleanField(default=False)
 
     objects = UserManager()
 
