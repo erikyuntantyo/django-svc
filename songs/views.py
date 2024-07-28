@@ -1,5 +1,6 @@
 from django.conf import settings
-from rest_framework import generics, permissions
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
@@ -14,12 +15,12 @@ class SongListView(generics.ListCreateAPIView):
     queryset = Song.objects.all()
     serializer_class = SongSerializer
     pagination_class = SongPagination
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
 class SongDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Song.objects.all()
     serializer_class = SongSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     http_method_names = ['get', 'patch', 'delete']
 
     def patch(self, request, *args, **kwargs):
