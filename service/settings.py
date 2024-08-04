@@ -106,8 +106,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'service.wsgi.application'
 
-APPEND_SLASH = True
-
 PAGE_SIZE = int(os.getenv('PAGE_SIZE', default=10))
 
 # REST framework settings
