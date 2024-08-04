@@ -159,3 +159,7 @@ Header: "Authorization: Bearer {YOUR_TOKEN}"
 GET http://localhost:8000/v1/songs?genre="Rock"
 Header: "Authorization: Bearer {YOUR_TOKEN}"
 ```
+
+## Documentation
+
+Now, when you open your browser at [http://localhost:8000/docs](http://localhost:8000/docs), you will see the automatic, interactive, API documentation.
