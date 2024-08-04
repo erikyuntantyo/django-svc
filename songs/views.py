@@ -11,11 +11,13 @@ from .serializers import SongSerializer
 class SongPagination(PageNumberPagination):
     page_size = settings.REST_FRAMEWORK.get('PAGE_SIZE', 10)
 
+
 class SongListView(generics.ListCreateAPIView):
     queryset = Song.objects.all()
     serializer_class = SongSerializer
     pagination_class = SongPagination
     permission_classes = [IsAuthenticated]
+
 
 class SongDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Song.objects.all()
