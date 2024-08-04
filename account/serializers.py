@@ -1,7 +1,10 @@
+from django.utils import timezone
 from rest_framework.serializers import (CharField, EmailField, ModelSerializer,
-                                        Serializer, ValidationError)
+                                        Serializer, UUIDField, ValidationError)
 
 from users.models import User
+
+from .models import RefreshToken
 
 
 class RegisterSerializer(ModelSerializer):
@@ -19,6 +22,7 @@ class RegisterSerializer(ModelSerializer):
         )
 
         return user
+
 
 class LoginSerializer(Serializer):
     email = EmailField()
@@ -40,5 +44,26 @@ class LoginSerializer(Serializer):
             raise ValidationError('Both "email" and "password" are required')
 
         data['user'] = user
+
+        return data
+
+
+class RefreshTokenSerializer(Serializer):
+    refresh_token = UUIDField()
+
+    def validate(self, data):
+        refresh_token = data.get('refresh_token')
+
+        if not refresh_token:
+            raise ValidationError('Refresh token is required')
+
+        try:
+            token = RefreshToken.objects.get(
+                token=refresh_token, expires_at__gt=timezone.now())
+        except RefreshToken.DoesNotExist:
+            raise ValidationError(
+                'Invalid or expired refresh token')
+
+        data['user'] = token.user
 
         return data
