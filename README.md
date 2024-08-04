@@ -74,7 +74,7 @@ We can use the refresh token to request a need access token.
 
 ### Requesting New Access Token
 ```
-POST http://localhost:8000/v1/auth/token/refresh/
+POST http://localhost:8000/v1/auth/token/refresh
 ```
 ```JSON
 {
