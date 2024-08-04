@@ -62,7 +62,7 @@ MIDDLEWARE = [
 ]
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',  # Default backend for authentication
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 # CORS_ALLOWED_ORIGIN_REGEXES = [
@@ -104,6 +104,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'service.wsgi.application'
+
+APPEND_SLASH = True
 
 PAGE_SIZE = int(os.getenv('PAGE_SIZE', default=10))
 
