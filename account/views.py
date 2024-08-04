@@ -1,3 +1,4 @@
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -13,6 +14,7 @@ from .serializers import (LoginSerializer, RefreshTokenSerializer,
 class RegisterUserView(APIView):
     permission_classes = [AllowAny]
 
+    @swagger_auto_schema(request_body=RegisterSerializer)
     def post(self, request, *args, **kwargs):
         serializer = RegisterSerializer(data=request.data)
 
@@ -27,6 +29,7 @@ class RegisterUserView(APIView):
 class ObtainAuthTokenView(APIView):
     permission_classes = [AllowAny]
 
+    @swagger_auto_schema(request_body=LoginSerializer)
     def post(self, request, *args, **kwargs):
         serializer = LoginSerializer(
             data=request.data, context={'request': request})
@@ -52,6 +55,7 @@ class ObtainAuthTokenView(APIView):
 class RefreshAuthTokenView(APIView):
     permission_classes = [AllowAny]
 
+    @swagger_auto_schema(request_body=RefreshTokenSerializer)
     def post(self, request, *args, **kwargs):
         serializer = RefreshTokenSerializer(data=request.data)
 

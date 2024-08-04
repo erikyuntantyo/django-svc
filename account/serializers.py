@@ -49,10 +49,10 @@ class LoginSerializer(Serializer):
 
 
 class RefreshTokenSerializer(Serializer):
-    refresh_token = UUIDField()
+    refreshToken = CharField(required=True)
 
     def validate(self, data):
-        refresh_token = data.get('refresh_token')
+        refresh_token = data.get('refreshToken')
 
         if not refresh_token:
             raise ValidationError('Refresh token is required')
