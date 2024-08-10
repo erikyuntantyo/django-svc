@@ -2,16 +2,16 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.status import (HTTP_201_CREATED, HTTP_400_BAD_REQUEST,
-                                   HTTP_500_INTERNAL_SERVER_ERROR)
 from rest_framework.views import APIView
+
+from utils.response_utils import ErrorResponse, SuccessResponse
 
 from .models import RefreshToken
 from .serializers import (LoginSerializer, RefreshTokenSerializer,
                           RegisterSerializer)
 
 
-class RegisterUserView(APIView):
+class RegisterUserView(APIView, SuccessResponse, ErrorResponse):
     permission_classes = [AllowAny]
 
     @swagger_auto_schema(request_body=RegisterSerializer)
@@ -21,12 +21,12 @@ class RegisterUserView(APIView):
         if serializer.is_valid():
             serializer.save()
 
-            return Response(serializer.data, status=HTTP_201_CREATED)
+            return self.created(serializer.data)
 
-        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+        return self.bad_request_error(serializer.errors)
 
 
-class ObtainAuthTokenView(APIView):
+class ObtainAuthTokenView(APIView, SuccessResponse, ErrorResponse):
     permission_classes = [AllowAny]
 
     @swagger_auto_schema(request_body=LoginSerializer)
@@ -41,18 +41,20 @@ class ObtainAuthTokenView(APIView):
                 token, _ = Token.objects.get_or_create(user=user)
                 refresh_token = RefreshToken.objects.create(user=user)
             except Exception as e:
-                return Response({'detail': str(e)}, status=HTTP_500_INTERNAL_SERVER_ERROR)
+                return self.internal_server_error(exception=e)
 
-            return Response({
+            return self.created({
                 'userId': user._id,
                 'token': token.key,
                 'refreshToken': refresh_token.token
             })
 
-        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+        return self.bad_request_error(
+            message='Invalid user and password.',
+            errors=serializer.errors)
 
 
-class RefreshAuthTokenView(APIView):
+class RefreshAuthTokenView(APIView, SuccessResponse, ErrorResponse):
     permission_classes = [AllowAny]
 
     @swagger_auto_schema(request_body=RefreshTokenSerializer)
@@ -63,6 +65,6 @@ class RefreshAuthTokenView(APIView):
             user = serializer.validated_data['user']
             token, _ = Token.objects.get_or_create(user=user)
 
-            return Response({'token': token.key})
+            return self.success({'token': token.key})
 
-        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+        return self.bad_request_error(serializer.errors)
