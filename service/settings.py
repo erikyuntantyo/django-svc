@@ -111,7 +111,7 @@ PAGE_SIZE = int(os.getenv('PAGE_SIZE', default=10))
 # REST framework settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'service.authentication.CustomTokenAuthentication',
+        'service.authentication.BearerAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
