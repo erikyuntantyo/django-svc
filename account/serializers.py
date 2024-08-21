@@ -10,7 +10,7 @@ from .models import RefreshToken
 class RegisterSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ['email', 'password']
+        fields = ['email', 'password', 'is_active', 'is_staff']
         extra_kwargs = {
             'password': {'write_only': True}
         }

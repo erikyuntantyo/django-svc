@@ -1,16 +1,19 @@
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework.authtoken.models import Token
-from rest_framework.permissions import AllowAny
-from rest_framework.views import APIView
+from rest_framework.exceptions import ValidationError
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
-from utils.response_utils import ErrorResponse, SuccessResponse
+from custom_auth.models import ExpiringToken
+from utils.custom_api_view import CustomResponseAPIView
+from utils.custom_response import (CreatedResponse,
+                                   InternalServerErrorException,
+                                   SuccessResponse, UnauthorizedException)
 
 from .models import RefreshToken
 from .serializers import (LoginSerializer, RefreshTokenSerializer,
                           RegisterSerializer)
 
 
-class RegisterUserView(APIView, SuccessResponse, ErrorResponse):
+class RegisterUserView(CustomResponseAPIView):
     permission_classes = [AllowAny]
 
     @swagger_auto_schema(request_body=RegisterSerializer)
@@ -20,12 +23,12 @@ class RegisterUserView(APIView, SuccessResponse, ErrorResponse):
         if serializer.is_valid():
             serializer.save()
 
-            return self.created(serializer.data)
+            return CreatedResponse(serializer.data)
 
-        return self.bad_request_error(serializer.errors)
+        raise ValidationError(serializer.errors)
 
 
-class ObtainAuthTokenView(APIView, SuccessResponse, ErrorResponse):
+class ObtainAuthTokenView(CustomResponseAPIView):
     permission_classes = [AllowAny]
 
     @swagger_auto_schema(request_body=LoginSerializer)
@@ -37,25 +40,27 @@ class ObtainAuthTokenView(APIView, SuccessResponse, ErrorResponse):
             user = serializer.validated_data['user']
 
             try:
-                Token.objects.filter(user=user).delete()
+                old_token = ExpiringToken.objects.get(user=user)
+                old_refresh_token = RefreshToken.objects.get(user=user)
 
-                token, _ = Token.objects.get_or_create(user=user)
-                refresh_token = RefreshToken.objects.create(user=user)
-            except Exception as e:
-                return self.internal_server_error(exception=e)
+                old_token.delete()
+                old_refresh_token.delete()
+            except Exception:
+                pass
 
-            return self.created({
+            token, _ = ExpiringToken.objects.get_or_create(user=user)
+            refresh_token = RefreshToken.objects.create(user=user)
+
+            return SuccessResponse({
                 'userId': user._id,
                 'token': token.key,
                 'refreshToken': refresh_token.token
             })
 
-        return self.bad_request_error(
-            message='Invalid user and password.',
-            errors=serializer.errors)
+        raise ValidationError('Invalid user and password.')
 
 
-class RefreshAuthTokenView(APIView, SuccessResponse, ErrorResponse):
+class RefreshAuthTokenView(CustomResponseAPIView):
     permission_classes = [AllowAny]
 
     @swagger_auto_schema(request_body=RefreshTokenSerializer)
@@ -64,8 +69,28 @@ class RefreshAuthTokenView(APIView, SuccessResponse, ErrorResponse):
 
         if serializer.is_valid():
             user = serializer.validated_data['user']
-            token, _ = Token.objects.get_or_create(user=user)
 
-            return self.success({'token': token.key})
+            ExpiringToken.objects.filter(user=user).delete()
+            token, _ = ExpiringToken.objects.get_or_create(user=user)
 
-        return self.bad_request_error(serializer.errors)
+            return SuccessResponse({'token': token.key})
+
+        raise ValidationError(serializer.errors)
+
+
+class RevokeTokenView(CustomResponseAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        try:
+            token = ExpiringToken.objects.get(user=request.user)
+            refresh_token = RefreshToken.objects.get(user=request.user)
+
+            token.delete()
+            refresh_token.delete()
+
+            return SuccessResponse({'message': 'Successfully logged out.'})
+        except ExpiringToken.DoesNotExist:
+            raise UnauthorizedException("Invalid token or user not logged in.")
+        except Exception as e:
+            raise InternalServerErrorException(e)
