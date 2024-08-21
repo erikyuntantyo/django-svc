@@ -60,7 +60,7 @@ Endpoint | HTTP Method | Result
 ## Use
 We can test the API using [curl](https://curl.haxx.se/) or [httpie](https://github.com/jakubroztocil/httpie#installation), or we can use [Postman](https://www.postman.com/).
 
-Also, we can see the API documentation using [swagger](http://localhost:8000/docs).
+Also, we can see the interactive API documentation using [swagger](http://localhost:8000/docs).
 
 ## Users Sign Up and Sign In
 
@@ -183,7 +183,3 @@ Header: "Authorization: Bearer {YOUR_TOKEN}"
 GET http://localhost:8000/v1/songs?genre="Rock"
 Header: "Authorization: Bearer {YOUR_TOKEN}"
 ```
-
-## Documentation
-
-Now, when you open your browser at [http://localhost:8000/docs](http://localhost:8000/docs), you will see the automatic, interactive, API documentation.
