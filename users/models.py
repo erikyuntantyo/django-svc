@@ -22,11 +22,8 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
-    _id = CharField(
-        primary_key=True,
-        default=ObjectId,
-        editable=False,
-        max_length=24)
+    _id = CharField(primary_key=True, default=ObjectId,
+                    editable=False, max_length=24)
     email = EmailField(unique=True)
     is_active = BooleanField(default=True)
     is_staff = BooleanField(default=False)
