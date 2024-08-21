@@ -7,6 +7,19 @@
 - Django REST Framework
 - Djongo
 
+## Features
+- Sign up function
+- Generate auth token with expiration time
+- Allow to refresh expired token
+- Custom succes response
+- Custom error response
+- Invoke token
+- CRUD (users and songs)
+
+## PR
+- Change user password
+- Token using SimpleJWT
+
 ## Installation
 After cloned the repository, please create a virtual environment, so you have a clean python installation.
 
@@ -23,17 +36,26 @@ pip install -r requirements.txt
 ```
 
 ## Structure
-In a RESTful API, endpoints (URLs) define the structure of the API and how end users access data from our application using the HTTP methods - GET, POST, PUT, DELETE. Endpoints should be logically organized around _collections_ and _elements_, both of which are resources.
+In a RESTful API, endpoints (URLs) define the structure of the API and how end users access data from our application using the HTTP methods - GET, POST, PATCH, DELETE. Endpoints should be logically organized around _collections_ and _elements_, both of which are resources.
 
 In our case, we have one single resource, `songs`, so we will use the following URLS - `/songs/` and `/songs/<id>` for collections and elements, respectively:
 
-Endpoint |HTTP Method | CRUD Method | Result
--- | -- |-- |--
-`songs` | GET | READ | Get all songs
-`songs/:id` | GET | READ | Get a single song
-`songs`| POST | CREATE | Create a new song
-`songs/:id` | PATCH | UPDATE | Update a song
-`songs/:id` | DELETE | DELETE | Delete a song
+Endpoint | HTTP Method | Result
+-- | -- | --
+`v1/account/login` | POST | Auth token and refresh token
+`v1/account/signup` | POST | Sign up for new user
+`v1/account/token/refresh` | POST | Refreshed token with new expiration time
+`v1/account/token/revoke` | POST | Revoke token
+`v1/songs` | GET | Get all songs
+`v1/songs/:id` | GET | Get a single song
+`v1/songs`| POST | Create a new song
+`v1/songs/:id` | PATCH | Update a song
+`v1/songs/:id` | DELETE | Delete a song
+`v1/users/` | GET | Get all users
+`v1/users/:id` | GET | Get a single user
+`v1/users`| POST | Create a new user
+`v1/users/:id` | PATCH | Update a user
+`v1/users/:id` | DELETE | Delete a user
 
 ## Use
 We can test the API using [curl](https://curl.haxx.se/) or [httpie](https://github.com/jakubroztocil/httpie#installation), or we can use [Postman](https://www.postman.com/).
