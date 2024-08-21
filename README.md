@@ -11,7 +11,7 @@
 - Sign up function
 - Generate auth token with expiration time
 - Allow to refresh expired token
-- Custom succes response
+- Custom success response
 - Custom error response
 - Invoke token
 - CRUD (users and songs)
@@ -48,17 +48,19 @@ Endpoint | HTTP Method | Result
 `v1/account/token/revoke` | POST | Revoke token
 `v1/songs` | GET | Get all songs
 `v1/songs/:id` | GET | Get a single song
-`v1/songs`| POST | Create a new song
+`v1/songs` | POST | Create a new song~~
 `v1/songs/:id` | PATCH | Update a song
 `v1/songs/:id` | DELETE | Delete a song
 `v1/users/` | GET | Get all users
 `v1/users/:id` | GET | Get a single user
-`v1/users`| POST | Create a new user
+`v1/users` | POST | Create a new user
 `v1/users/:id` | PATCH | Update a user
 `v1/users/:id` | DELETE | Delete a user
 
 ## Use
 We can test the API using [curl](https://curl.haxx.se/) or [httpie](https://github.com/jakubroztocil/httpie#installation), or we can use [Postman](https://www.postman.com/).
+
+Also, we can see the API documentation using [swagger](http://localhost:8000/docs).
 
 ## Users Sign Up and Sign In
 
