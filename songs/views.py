@@ -4,7 +4,8 @@ from rest_framework.generics import (ListCreateAPIView,
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 
-from utils.response_utils import SuccessResponse
+from utils.custom_api_view import CustomResponseAPIView
+from utils.custom_response import SuccessResponse
 
 from .models import Song
 from .serializers import SongSerializer
@@ -14,18 +15,19 @@ class SongPagination(PageNumberPagination):
     page_size = settings.REST_FRAMEWORK.get('PAGE_SIZE', 10)
 
 
-class SongListView(ListCreateAPIView):
+class SongsListView(ListCreateAPIView, CustomResponseAPIView):
     queryset = Song.objects.all()
     serializer_class = SongSerializer
     pagination_class = SongPagination
     permission_classes = [IsAuthenticated]
+    http_method_names = ['get']
 
 
-class SongDetailView(RetrieveUpdateDestroyAPIView, SuccessResponse):
+class SongDetailView(RetrieveUpdateDestroyAPIView, CustomResponseAPIView):
     queryset = Song.objects.all()
     serializer_class = SongSerializer
     permission_classes = [IsAuthenticated]
-    http_method_names = ['get', 'patch', 'delete']
+    http_method_names = ['get', 'patch', 'delete', 'options']
 
     def patch(self, request, *args, **kwargs):
         partial = True
@@ -38,4 +40,4 @@ class SongDetailView(RetrieveUpdateDestroyAPIView, SuccessResponse):
 
         self.perform_update(serializer)
 
-        return self.success(serializer.data)
+        return SuccessResponse(serializer.data)
