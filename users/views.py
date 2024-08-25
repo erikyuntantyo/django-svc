@@ -19,8 +19,10 @@ class UsersListView(ListCreateAPIView, CustomResponseAPIView):
     serializer_class = UserSerializer
     pagination_class = UserPagination
     permission_classes = [IsAuthenticated]
+    http_method_names = ['get']
 
 
 class RegisterUserView(CreateAPIView, CustomResponseAPIView):
     queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
+    http_method_names = ['post']
