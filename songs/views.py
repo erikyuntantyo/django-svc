@@ -20,14 +20,14 @@ class SongsListView(ListCreateAPIView, CustomResponseAPIView):
     serializer_class = SongSerializer
     pagination_class = SongPagination
     permission_classes = [IsAuthenticated]
-    http_method_names = ['get']
+    http_method_names = ['get', 'post']
 
 
 class SongDetailView(RetrieveUpdateDestroyAPIView, CustomResponseAPIView):
     queryset = Song.objects.all()
     serializer_class = SongSerializer
     permission_classes = [IsAuthenticated]
-    http_method_names = ['get', 'patch', 'delete', 'options']
+    http_method_names = ['get', 'patch', 'delete']
 
     def patch(self, request, *args, **kwargs):
         partial = True
